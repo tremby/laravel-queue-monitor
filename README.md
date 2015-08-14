@@ -77,4 +77,6 @@ Route::get('queue-monitor.json', function () {
 In practice you might set the cron job to run every 15 minutes, and then
 automate another job (such as with a remote health checker) to run a few minutes
 later, consume the JSON, and ensure all queues have the `ok` status. If any
-don't, it could send an alert with a link to the HTML queue status view.
+don't, it could send an alert with a link to the HTML queue status view. It
+could also check that the date at which the last check was queued is reasonable,
+and so that the cron job has not stopped working.
