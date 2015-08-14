@@ -1,0 +1,19 @@
+{
+    "name": "tremby/laravel-queue-monitor",
+    "description": "Laravel queue monitoring tools",
+    "require": {
+        "laravel/framework": "~5.0"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Bart Nagel",
+            "email": "bart@tremby.net"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Tremby\\QueueMonitor\\": "src/"
+        }
+    }
+}
