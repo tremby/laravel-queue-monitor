@@ -1,9 +1,9 @@
 <?php
 namespace Tremby\QueueMonitor;
 
-use Illuminate\Contracts\Cache\Repository as CacheRepository;
-use Illuminate\Contracts\View\Factory as ViewFactory;
+use Cache;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
+use View;
 
 class ServiceProvider extends BaseServiceProvider
 {
@@ -20,13 +20,13 @@ class ServiceProvider extends BaseServiceProvider
     /**
      * {@inheritDoc}
      */
-    public function boot(ViewFactory $viewFactory, CacheRepository $cache)
+    public function boot()
     {
-        // Define views path
-        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'queue-monitor');
+        // Register namespaces
+        $this->package('tremby/queue-monitor', null, dirname(__DIR__) . '/resources');
 
         // Composer for the status views
-        $composer = function ($view) use ($cache) {
+        $composer = function ($view) {
             $view->withQueues(array_map(function ($queueName) {
                 $status = QueueStatus::get($queueName);
                 if (!$status) {
@@ -34,9 +34,9 @@ class ServiceProvider extends BaseServiceProvider
                     $status->setMessage("Status not found in cache; is a cron job set up and running?");
                 }
                 return $status;
-            }, $cache->get(QueueMonitor::QUEUES_CACHE_KEY, [])));
+            }, Cache::get(QueueMonitor::QUEUES_CACHE_KEY, [])));
         };
-        $viewFactory->composer('queue-monitor::status', $composer);
-        $viewFactory->composer('queue-monitor::status-json', $composer);
+        View::composer('queue-monitor::status', $composer);
+        View::composer('queue-monitor::status-json', $composer);
     }
 }

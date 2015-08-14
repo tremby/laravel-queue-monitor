@@ -6,24 +6,24 @@ This adds various tools to a project for monitoring its queue.
 Laravel version
 ---------------
 
-This branch and the `2.*` line of tags are for Laravel 5. For the Laravel 4
-version [see the laravel4 branch][l4] and the `1.*` line of tags.
+This branch and the `1.*` line of tags are for Laravel 4. For the Laravel 5
+version [see the laravel5 branch][l5] and the `2.*` line of tags.
 
-[l4]: https://github.com/tremby/laravel-queue-monitor/tree/laravel4
+[l5]: https://github.com/tremby/laravel-queue-monitor/tree/laravel5
 
 Installation
 ------------
 
 Require it in your Laravel project:
 
-    composer require tremby/laravel-queue-monitor
+    composer require tremby/laravel-queue-monitor:"^1.0.0"
 
-Register the service provider in your `config/app.php` file:
+Register the service provider in your `app/config/app.php` file:
 
 ```php
 'providers' => [
     ...
-    Tremby\QueueMonitor\ServiceProvider::class,
+    'Tremby\QueueMonitor\ServiceProvider',
 ],
 ```
 

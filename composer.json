@@ -2,7 +2,7 @@
     "name": "tremby/laravel-queue-monitor",
     "description": "Laravel queue monitoring tools",
     "require": {
-        "laravel/framework": "~5.0"
+        "laravel/framework": "~4.2"
     },
     "license": "MIT",
     "authors": [

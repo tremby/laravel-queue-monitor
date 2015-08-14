@@ -2,17 +2,11 @@
 namespace Tremby\QueueMonitor;
 
 use Carbon\Carbon;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Bus\SelfHandling;
-use Illuminate\Contracts\Logging\Log;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\Jobs\Job as IlluminateJob;
+use Log;
 
-class Job implements SelfHandling, ShouldQueue
+class Job
 {
-    use Queueable;
-    use InteractsWithQueue;
-
     /**
      * @var string
      */
@@ -24,41 +18,32 @@ class Job implements SelfHandling, ShouldQueue
     protected $startTime;
 
     /**
-     * Make a new instance
-     *
-     * @param string $queueName Queue connection name
-     * @param Carbon $startTime Queue checker start time
-     * @return void
-     */
-    public function __construct($queueName, Carbon $startTime)
-    {
-        $this->queueName = $queueName;
-        $this->startTime = $startTime;
-    }
-
-    /**
      * Execute the job
      *
-     * @param Log $log
+     * @param Illuminate\Queue\Jobs\Job $job
+     * @param array $data
      * @return void
      */
-    public function handle(Log $log)
+    public function handle(IlluminateJob $job, $data)
     {
-        $log->debug("Handling check job for queue '{$this->queueName}', queued at {$this->startTime}");
+        $this->queueName = $data['queueName'];
+        $this->startTime = new Carbon($data['startTime']['date'], $data['startTime']['timezone']);
+
+        Log::debug("Handling check job for queue '{$this->queueName}' queued at {$this->startTime}");
         $status = QueueStatus::get($this->queueName);
         if (!$status) {
             $message = "Queue status was not found in cache, yet queued job ran; is the cache correctly configured?";
-            $log->error($message);
+            Log::error($message);
             $status = new QueueStatus($this->queueName, QueueStatus::ERROR, false);
             $status->setMessage($message);
             $status->setEndTime();
             $status->save();
         } elseif (!$status->isPending()) {
-            $log->warning("Non-pending status for check for queue '{$this->queueName}' found in the cache; ignoring: " . $status);
+            Log::warning("Non-pending status for check for queue '{$this->queueName}' found in the cache; ignoring: " . $status);
         } elseif (!$status->getStartTime() || $status->getStartTime()->ne($this->startTime)) {
-            $log->warning("Pending status for check for queue '{$this->queueName}' found in the cache with mismatching time (expected {$this->startTime}, found {$status->getStartTime()}); ignoring: " . $status);
+            Log::warning("Pending status for check for queue '{$this->queueName}' found in the cache with mismatching time (expected {$this->startTime}, found {$status->getStartTime()}); ignoring: " . $status);
         } else {
-            $log->debug("Successful queue check for queue '{$this->queueName}'");
+            Log::debug("Successful queue check for queue '{$this->queueName}'");
             $status->setStatus(QueueStatus::OK);
             $status->setEndTime();
             $status->save();

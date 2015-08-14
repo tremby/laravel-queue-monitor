@@ -3,8 +3,8 @@ namespace Tremby\QueueMonitor;
 
 use Cache;
 use Carbon\Carbon;
-use Illuminate\Contracts\Support\Arrayable;
-use Illuminate\Contracts\Support\Jsonable;
+use Illuminate\Support\Contracts\ArrayableInterface as Arrayable;
+use Illuminate\Support\Contracts\JsonableInterface as Jsonable;
 use JsonSerializable;
 
 class QueueStatus implements

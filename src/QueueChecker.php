@@ -37,9 +37,13 @@ class QueueChecker
         $status = new QueueStatus($this->queueName, QueueStatus::PENDING);
         $status->save();
 
-        Queue::pushOn(
-            $this->queueName,
-            new Job($this->queueName, $this->startTime)
+        Queue::push(
+            'Tremby\QueueMonitor\Job@handle',
+            [
+                'queueName' => $this->queueName,
+                'startTime' => $this->startTime,
+            ],
+            $this->queueName
         );
     }
 }
