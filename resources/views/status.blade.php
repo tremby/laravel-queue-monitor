@@ -3,18 +3,18 @@
         <th>
             Queue name
         </th>
-        <td>
+        <th>
             Status
-        </td>
-        <td>
+        </th>
+        <th>
             Details
-        </td>
-        <td>
+        </th>
+        <th>
             Check queued
-        </td>
-        <td>
+        </th>
+        <th>
             Queue job completed
-        </td>
+        </th>
     </thead>
     <tbody>
         @foreach ($queues as $queueStatus)
