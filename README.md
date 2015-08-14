@@ -6,9 +6,10 @@ This adds various tools to a project for monitoring its queue.
 Laravel version
 ---------------
 
-This branch is for Laravel 5.
+This branch and the `2.*` line of tags are for Laravel 5. For the Laravel 4
+version [see the laravel4 branch][l4] and the `1.*` line of tags.
 
-Laravel 4 version TODO
+[l4]: https://github.com/tremby/laravel-queue-monitor/tree/laravel4
 
 Installation
 ------------
