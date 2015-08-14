@@ -19,10 +19,12 @@ Require it in your Laravel project:
 
 Register the service provider in your `config/app.php` file:
 
-    'providers' => [
-        ...
-        Tremby\QueueMonitor\ServiceProvider::class,
-    ],
+```php
+'providers' => [
+    ...
+    Tremby\QueueMonitor\ServiceProvider::class,
+],
+```
 
 Use
 ---
@@ -46,9 +48,11 @@ status views. The markup of the provided views are [Twitter
 Bootstrap](http://getbootstrap.com/)-friendly and if the `status-page` view is
 used Bootstrap is loaded from a CDN.
 
-    Route::get('queue-monitor', function () {
-        return Response::view('queue-monitor::status-page');
-    });
+```php
+Route::get('queue-monitor', function () {
+    return Response::view('queue-monitor::status-page');
+});
+```
 
 Other views available are `queue-monitor::status-panel`, which is the `.panel`
 element and its contents; and `queue-monitor::status`, which is just the `table`
@@ -60,13 +64,15 @@ There's also `queue-monitor::status-json`, which renders JSON suitable for
 machine consumption. This allows rendering options to be passed to the
 underlying `json_encode` and can be used like this:
 
-    Route::get('queue-monitor.json', function () {
-        $response = Response::view('queue-monitor::status-json', [
-            'options' => \JSON_PRETTY_PRINT,
-        ]);
-        $response->header('Content-Type', 'application/json');
-        return $response;
-    });
+```php
+Route::get('queue-monitor.json', function () {
+    $response = Response::view('queue-monitor::status-json', [
+        'options' => \JSON_PRETTY_PRINT,
+    ]);
+    $response->header('Content-Type', 'application/json');
+    return $response;
+});
+```
 
 In practice you might set the cron job to run every 15 minutes, and then
 automate another job (such as with a remote health checker) to run a few minutes
