@@ -1,10 +1,9 @@
 <?php
 namespace Tremby\QueueMonitor;
 
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Bus\SelfHandling;
-use Illuminate\Contracts\Cache\Repository as CacheRepository;
-use Illuminate\Contracts\Config\Repository as ConfigRepository;
 use Illuminate\Contracts\Logging\Log;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
@@ -14,55 +13,55 @@ class Job implements SelfHandling, ShouldQueue
     use Queueable;
     use InteractsWithQueue;
 
-    protected $queue;
-    protected $time;
-    protected $checkCacheKey;
+    /**
+     * @var string
+     */
+    protected $queueName;
+
+    /**
+     * @var Carbon
+     */
+    protected $startTime;
 
     /**
      * Make a new instance
      *
-     * @param string $queue Queue connection name
-     * @param string $time Queue checker start time
-     * @param string $checkCacheKey Check cache key
+     * @param string $queueName Queue connection name
+     * @param Carbon $startTime Queue checker start time
      * @return void
      */
-    public function __construct($queue, $time, $checkCacheKey)
+    public function __construct($queueName, Carbon $startTime)
     {
-        $this->queue = $queue;
-        $this->time = $time;
-        $this->checkCacheKey = $checkCacheKey;
+        $this->queueName = $queueName;
+        $this->startTime = $startTime;
     }
 
     /**
      * Execute the job
      *
-     * @param CacheRepository $cache
-     * @param ConfigRepository $config
+     * @param Log $log
      * @return void
      */
-    public function handle(CacheRepository $cache, ConfigRepository $config, Log $log)
+    public function handle(Log $log)
     {
-        $log->debug("Handling check job for queue '{$this->queue}' started at time $time");
-        $queueConfig = $config->get('queue.connections.' . $this->queue);
-        $data = $cache->get($this->checkCacheKey);
-        if (!$data) {
-            $message = "Data for check was not found in cache";
+        $log->debug("Handling check job for queue '{$this->queueName}', queued at {$this->startTime}");
+        $status = QueueStatus::get($this->queueName);
+        if (!$status) {
+            $message = "Queue status was not found in cache, yet queued job ran; is the cache correctly configured?";
             $log->error($message);
-            $data = [
-                'finish_time' => time(),
-                'status' => QueueChecker::CHECK_STATUS_ERROR,
-                'message' => $message,
-            ];
-            $cache->put($this->checkCacheKey, $data, QueueChecker::CACHE_TIME);
-        } elseif ($data['status'] != QueueChecker::CHECK_STATUS_PENDING) {
-            $log->warning("Non-pending status for check for queue '{$this->queue}' found in the cache; ignoring: " . print_r($data, true));
-        } elseif ($data['time'] != $this->time) {
-            $log->warning("Pending status for check for queue '{$this->queue}' found in the cache with mismatching time (expected {$this->time}, found {$data['time']}); ignoring: " . print_r($data, true));
+            $status = new QueueStatus($this->queueName, QueueStatus::ERROR, false);
+            $status->setMessage($message);
+            $status->setEndTime();
+            $status->save();
+        } elseif (!$status->isPending()) {
+            $log->warning("Non-pending status for check for queue '{$this->queueName}' found in the cache; ignoring: " . $status);
+        } elseif (!$status->getStartTime() || $status->getStartTime()->ne($this->startTime)) {
+            $log->warning("Pending status for check for queue '{$this->queueName}' found in the cache with mismatching time (expected {$this->startTime}, found {$status->getStartTime()}); ignoring: " . $status);
         } else {
-            $log->debug("Successful queue check for queue '{$this->queue}'");
-            $data['status'] = QueueChecker::CHECK_STATUS_OK;
-            $data['finish_time'] = time();
-            $cache->put($this->checkCacheKey, $data, QueueChecker::CACHE_TIME);
+            $log->debug("Successful queue check for queue '{$this->queueName}'");
+            $status->setStatus(QueueStatus::OK);
+            $status->setEndTime();
+            $status->save();
         }
     }
 }

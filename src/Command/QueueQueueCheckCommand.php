@@ -13,14 +13,14 @@ class QueueQueueCheckCommand extends Command
      *
      * @var string
      */
-    protected $name = 'queue:queuechecks';
+    protected $name = 'queue:queuecheck';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = "Queue a check to make sure the a queue is functioning properly";
+    protected $description = "Queue a check to make sure a queue is functioning properly";
 
     /**
      * Create a new command instance.
