@@ -210,9 +210,9 @@ class QueueStatus implements
             'status' => $this->getStatus(),
             'message' => $this->getMessage(),
             'startTime' => $this->getStartTime(),
-            'startTimeDiff' => $this->getStartTime()->diffInSeconds(null, false),
+            'startTimeDiff' => $this->getStartTime() ? $this->getStartTime()->diffInSeconds(null, false) : null,
             'endTime' => $this->getEndTime(),
-            'endTimeDiff' => $this->getEndTime()->diffInSeconds(null, false),
+            'endTimeDiff' => $this->getEndTime() ? $this->getEndTime()->diffInSeconds(null, false) : null,
         ];
     }
 
