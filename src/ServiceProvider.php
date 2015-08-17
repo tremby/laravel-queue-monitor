@@ -27,14 +27,16 @@ class ServiceProvider extends BaseServiceProvider
 
         // Composer for the status views
         $composer = function ($view) {
-            $view->withQueues(array_map(function ($queueName) {
+            $queues = [];
+            foreach (Cache::get(QueueMonitor::QUEUES_CACHE_KEY, []) as $queueName) {
                 $status = QueueStatus::get($queueName);
                 if (!$status) {
                     $status = new QueueStatus($queueName, QueueStatus::ERROR, false);
                     $status->setMessage("Status not found in cache; is a cron job set up and running?");
                 }
-                return $status;
-            }, Cache::get(QueueMonitor::QUEUES_CACHE_KEY, [])));
+                $queues[$queueName] = $status;
+            }
+            $view->withQueues($queues);
         };
         View::composer('queue-monitor::status', $composer);
         View::composer('queue-monitor::status-json', $composer);
