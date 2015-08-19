@@ -181,7 +181,7 @@ class QueueStatus implements
      */
     public function save()
     {
-        Cache::put(QueueMonitor::getCheckCacheKey($this->getQueueName()), $this, QueueMonitor::CACHE_TIME);
+        Cache::forever(QueueMonitor::getCheckCacheKey($this->getQueueName()), $this);
     }
 
     /**

@@ -7,7 +7,6 @@ use Config;
 
 class QueueMonitor
 {
-    const CACHE_TIME = Carbon::MINUTES_PER_HOUR * Carbon::HOURS_PER_DAY;
     const CACHE_KEY_PREFIX = 'queue-monitor:';
     const QUEUES_CACHE_KEY = self::CACHE_KEY_PREFIX . 'queues';
 
@@ -41,7 +40,7 @@ class QueueMonitor
         $queues = Cache::get(self::QUEUES_CACHE_KEY, []);
         if (!in_array($queueName, $queues)) {
             $queues[] = $queueName;
-            Cache::put(self::QUEUES_CACHE_KEY, $queues, self::CACHE_TIME);
+            Cache::forever(self::QUEUES_CACHE_KEY, $queues);
         }
 
         // Add a queue job for this queue
