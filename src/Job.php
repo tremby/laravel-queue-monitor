@@ -48,5 +48,7 @@ class Job
             $status->setEndTime();
             $status->save();
         }
+
+        $job->delete();
     }
 }
