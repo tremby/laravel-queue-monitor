@@ -3,12 +3,11 @@ namespace Tremby\QueueMonitor;
 
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Bus\SelfHandling;
 use Illuminate\Contracts\Logging\Log;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
-class Job implements SelfHandling, ShouldQueue
+class Job implements ShouldQueue
 {
     use Queueable;
     use InteractsWithQueue;
