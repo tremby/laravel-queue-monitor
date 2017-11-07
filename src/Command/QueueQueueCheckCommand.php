@@ -33,13 +33,33 @@ class QueueQueueCheckCommand extends Command
     }
 
     /**
-     * Execute the console command.
+     * Execute the console command for Laravel 5.4 or older
      *
      * @return mixed
      */
     public function fire()
     {
         QueueMonitor::queueQueueCheck($this->argument('queue'));
+    }
+
+    /**
+     * Execute the console command for Laravel 5.5+
+     *
+     * @return mixed
+     */
+    public function handle()
+    {
+        $this->fire();
+    }
+
+    /**
+     * Execute the console command for Laravel 5.5+
+     *
+     * @return mixed
+     */
+    public function handle()
+    {
+        $this->fire();
     }
 
     /**
