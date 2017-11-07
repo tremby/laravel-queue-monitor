@@ -9,7 +9,12 @@ Laravel version
 This branch and the `2.*` line of tags are for Laravel 5. For the Laravel 4
 version [see the laravel4 branch][l4] and the `1.*` line of tags.
 
+If you are using Laravel 5.5 or later, and are using PHP 7.1 or later,
+you may instead consider using [Laravel Horizon][horizon],
+which is an official tool and solves the same issue as this package.
+
 [l4]: https://github.com/tremby/laravel-queue-monitor/tree/laravel4
+[horizon]: https://laravel.com/docs/5.5/horizon
 
 Installation
 ------------
