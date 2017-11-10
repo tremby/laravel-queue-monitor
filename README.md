@@ -24,7 +24,9 @@ Require it in your Laravel project:
 
     composer require tremby/laravel-queue-monitor
 
-Register the service provider in your `config/app.php` file:
+If you're running Laravel 5.4 or below,
+you have to register the service provider manually
+in your `config/app.php` file:
 
 ```php
 'providers' => [

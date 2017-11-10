@@ -16,5 +16,12 @@
         "psr-4": {
             "Tremby\\QueueMonitor\\": "src/"
         }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Tremby\\QueueMonitor\\ServiceProvider"
+            ]            
+        }
     }
 }
