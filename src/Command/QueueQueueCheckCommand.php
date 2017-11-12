@@ -53,16 +53,6 @@ class QueueQueueCheckCommand extends Command
     }
 
     /**
-     * Execute the console command for Laravel 5.5+
-     *
-     * @return mixed
-     */
-    public function handle()
-    {
-        $this->fire();
-    }
-
-    /**
      * Get the console command arguments.
      *
      * @return array
