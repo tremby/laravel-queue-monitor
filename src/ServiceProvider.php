@@ -31,7 +31,7 @@ class ServiceProvider extends BaseServiceProvider
             foreach ($cache->get(QueueMonitor::QUEUES_CACHE_KEY, []) as $queueName) {
                 $status = QueueStatus::get($queueName);
                 if (!$status) {
-                    $status = new QueueStatus($queueName, QueueStatus::ERROR, false);
+                    $status = new QueueStatus($queueName, QueueStatus::ERROR);
                     $status->setMessage("Status not found in cache; is a cron job set up and running?");
                 }
                 $queues[$queueName] = $status;

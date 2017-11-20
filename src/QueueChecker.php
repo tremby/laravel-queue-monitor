@@ -34,7 +34,7 @@ class QueueChecker
      */
     public function queueCheck()
     {
-        $status = new QueueStatus($this->queueName, QueueStatus::PENDING);
+        $status = new QueueStatus($this->queueName, QueueStatus::PENDING, $this->startTime);
         $status->save();
 
         Queue::pushOn(

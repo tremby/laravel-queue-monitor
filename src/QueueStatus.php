@@ -46,14 +46,15 @@ class QueueStatus implements
      *
      * @param string $queueName Queue name
      * @param string $status Status constant
-     * @param bool $startTime Whether to set the start time as the current time
+     * @param Carbon|null $startTime Start time to set if appropriate, such as
+     * when the job was queued
      */
-    public function __construct($queueName, $status, $startTime = true)
+    public function __construct($queueName, $status, $startTime = null)
     {
         $this->queueName = $queueName;
         $this->status = $status;
         if ($startTime) {
-            $this->startTime = Carbon::now();
+            $this->startTime = $startTime;
         }
     }
 

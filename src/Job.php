@@ -48,7 +48,7 @@ class Job implements ShouldQueue
         if (!$status) {
             $message = "Queue status was not found in cache, yet queued job ran; is the cache correctly configured?";
             $log->error($message);
-            $status = new QueueStatus($this->queueName, QueueStatus::ERROR, false);
+            $status = new QueueStatus($this->queueName, QueueStatus::ERROR);
             $status->setMessage($message);
             $status->setEndTime();
             $status->save();
