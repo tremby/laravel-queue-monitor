@@ -2,7 +2,6 @@
 namespace Tremby\QueueMonitor;
 
 use Cache;
-use Carbon\Carbon;
 use Config;
 
 class QueueMonitor
